@@ -1,0 +1,28 @@
+version: '3'
+services:
+  caddy:
+    image: caddy:latest
+    container_name: proxy
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      - '1337:1337'
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - api
+
+  api:
+    image: akhonya/nexascale:0.0.1
+    container_name: api
+    restart: unless-stopped
+    ports:
+      - '1339:3000'
+
+volumes:
+  caddy_data:
+    external: true
+  caddy_config:
